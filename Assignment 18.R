@@ -45,7 +45,7 @@ conf_cart
 
 # CV
 train_control <- trainControl(method = "cv", number = 10)
-model_cv <- train(classe ~ ., data = test, trControl = train_control, method = "rpart")
+model_cv <- train(classe ~ ., data = train, trControl = train_control, method = "rpart")
 model_cv
 pred_cv <- predict(model_cv, test)                       # make prediction
 conf_cv <- confusionMatrix(test$classe, pred_cv)    # confusion matrix
@@ -53,7 +53,7 @@ conf_cv
 
 # Ross Quinlan C5.0
 train_control <- trainControl(method = "cv", number = 10)
-model_c5.0 <- train(classe ~ ., data = test, trControl = train_control, method = "C5.0")
+model_c5.0 <- train(classe ~ ., data = train, trControl = train_control, method = "C5.0")
 model_c5.0
 pred_c5.0 <- predict(model_c5.0, test)                       # make prediction
 conf_c5.0 <- confusionMatrix(test$classe, pred_c5.0)    # confusion matrix
@@ -61,7 +61,7 @@ conf_c5.0
 
 # Boosted Tree
 train_control <- trainControl(method = "cv", number = 10)
-model_bst <- train(classe ~ ., data = test, trControl = train_control, method = "bstTree")
+model_bst <- train(classe ~ ., data = train, trControl = train_control, method = "bstTree")
 model_bst
 pred_bst <- predict(model_bst, test)                       # make prediction
 conf_bst <- confusionMatrix(test$classe, pred_bst)    # confusion matrix
@@ -69,7 +69,7 @@ conf_bst
 
 # C5.0 Rules
 train_control <- trainControl(method = "cv", number = 10)
-model_c5.0rules <- train(classe ~ ., data = test, trControl = train_control, method = "C5.0Rules")
+model_c5.0rules <- train(classe ~ ., data = train, trControl = train_control, method = "C5.0Rules")
 model_c5.0rules
 pred_c5.0rules <- predict(model_c5.0rules, test)                       # make prediction
 conf_c5.0rules <- confusionMatrix(test$classe, pred_c5.0rules)    # confusion matrix
@@ -77,7 +77,7 @@ conf_c5.0rules
 
 # C5.0 Tree
 train_control <- trainControl(method = "cv", number = 10)
-model_c5.0tree <- train(classe ~ ., data = test, trControl = train_control, method = "C5.0Tree")
+model_c5.0tree <- train(classe ~ ., data = train, trControl = train_control, method = "C5.0Tree")
 model_c5.0tree
 pred_c5.0tree <- predict(model_c5.0tree, test)                       # make prediction
 conf_c5.0tree <- confusionMatrix(test$classe, pred_c5.0tree)    # confusion matrix
@@ -86,7 +86,7 @@ conf_c5.0tree
 # conditional inference trees
 # Ctree
 train_control <- trainControl(method = "cv", number = 10)
-model_ctree <- train(classe ~ ., data = test, trControl = train_control, method = "ctree")
+model_ctree <- train(classe ~ ., data = train, trControl = train_control, method = "ctree")
 model_ctree
 pred_ctree <- predict(model_ctree, test)                       # make prediction
 conf_ctree <- confusionMatrix(test$classe, pred_ctree)    # confusion matrix
@@ -94,7 +94,7 @@ conf_ctree
 
 # Ctree2
 train_control <- trainControl(method = "cv", number = 10)
-model_ctree2 <- train(classe ~ ., data = test, trControl = train_control, method = "ctree2")
+model_ctree2 <- train(classe ~ ., data = train, trControl = train_control, method = "ctree2")
 model_ctree2
 pred_ctree2 <- predict(model_ctree2, test)                       # make prediction
 conf_ctree2 <- confusionMatrix(test$classe, pred_ctree2)    # confusion matrix
@@ -124,23 +124,23 @@ chisq.test(table(test$classe), prop.table(table(pred_ctree)))      # pv = 0.2202
 chisq.test(table(test$classe), prop.table(table(pred_ctree2)))     # pv = 0.2202
 chisq.test(table(test$classe), prop.table(table(pred_rf)))         # pv = 0.2202
 
-conf_tree$overall[1]       # 0.9511589
-conf_cart$overall[1]       # 0.968543
-conf_cv$overall[1]         # 0.884106
-conf_c5.0$overall[1]       # 1
-conf_bst$overall[1]        # 0.5596026
-conf_c5.0rules$overall[1]  # 0.9975166
-conf_c5.0tree$overall[1]   # 0.9975166
-conf_ctree$overall[1]      # 0.9983444
-conf_ctree2$overall[1]     # 0.9312914
-conf_rf$overall[1]         # 1
+conf_tree$overall[1]       
+conf_cart$overall[1]       
+conf_cv$overall[1]         
+conf_c5.0$overall[1]       
+conf_bst$overall[1]        
+conf_c5.0rules$overall[1]  
+conf_c5.0tree$overall[1]   
+conf_ctree$overall[1]      
+conf_ctree2$overall[1]    
+conf_rf$overall[1]        
 
 #-----------------------------------------------------------------------------------------
 # c. Apply all the model validation techniques.
 
 # 1
 train_control <- trainControl(method = "cv", number = 10)
-cvmodel1 <- train(classe ~ ., data = test, trControl = train_control, method = "rf") 
+cvmodel1 <- train(classe ~ ., data = train, trControl = train_control, method = "rf") 
 cvpred1 <- predict(cvmodel1, test)                        # make prediction
 cvconf1 <- confusionMatrix(test$classe, pred_ctree)       # confusion matrix
 cvconf1$overall[1]                                        # accuracy
@@ -148,7 +148,7 @@ cvconf1$overall[1]                                        # accuracy
 # default
 set.seed(123)
 train_control <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
-rf_default <- train(classe ~ ., data = test, trControl = train_control, method = "rf",
+rf_default <- train(classe ~ ., data = train, trControl = train_control, method = "rf",
                   metric = 'Accuracy', tuneGrid = expand.grid(.mtry = sqrt(ncol(train)))) 
 pred_rf_default <- predict(rf_default, test)                            # make prediction
 conf_rf_default <- confusionMatrix(test$classe, pred_rf_default)        # confusion matrix
@@ -157,7 +157,7 @@ varImp(rf_default)                                                      # var im
 
 # random search for parameters
 train_control <- trainControl(method = "repeatedcv", number = 10, repeats = 3, search = 'random')
-rf_random <- train(classe ~ ., data = test, trControl = train_control, method = "rf",
+rf_random <- train(classe ~ ., data = train, trControl = train_control, method = "rf",
                     metric = 'Accuracy', tuneLength = 15) 
 pred_rf_random <- predict(rf_random, test)                            # make prediction
 conf_rf_random <- confusionMatrix(test$classe, pred_rf_random)        # confusion matrix
@@ -166,7 +166,7 @@ varImp(rf_random)                                                     # var impo
 
 # Grid Search
 train_control <- trainControl(method = "repeatedcv", number = 10, repeats = 3, search = 'grid')
-rf_grid <- train(classe ~ ., data = test, trControl = train_control, method = "rf",
+rf_grid <- train(classe ~ ., data = train, trControl = train_control, method = "rf",
                    metric = 'Accuracy', tuneGrid = expand.grid(.mtry=c(1:15))) 
 pred_rf_grid <- predict(rf_grid, test)                            # make prediction
 conf_rf_grid <- confusionMatrix(test$classe, pred_rf_grid)        # confusion matrix
@@ -175,7 +175,7 @@ varImp(rf_grid)                                                   # var importan
 
 # gradient boosting
 train_control <- trainControl(method = "repeatedcv", number = 5, repeats = 3, search = 'grid')
-rf_gbm <- train(classe ~ ., data = test, trControl = train_control, method = "gbm",
+rf_gbm <- train(classe ~ ., data = train, trControl = train_control, method = "gbm",
                  metric = 'Accuracy') 
 print(rf_gbm)
 plot(rf_gbm)
